@@ -18,7 +18,7 @@ def output_content_of_url(url):
     name_list = url_soup.find_all("li", {'class': 'bullet'})
     last_name_list = []
 
-    # get all last_name_url_list
+    # get all last_name_url_list 
     for content in name_list:
         name_href_list = content.find_all('a')
         for href in name_href_list:

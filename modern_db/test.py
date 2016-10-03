@@ -70,6 +70,7 @@ def output_content_of_url(url):
             cnt += 1
         wfile.write('\n')
     wfile.close()
+
 if __name__ == '__main__':
     output_content_of_url(index_url)
 

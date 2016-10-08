@@ -62,6 +62,7 @@ def output_content_of_url(url):
             break
         wfile.write('\n')
     wfile.close()
+
 if __name__ == '__main__':
     output_content_of_url(index_url)
 

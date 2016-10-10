@@ -23,8 +23,8 @@
       <file leaf-file-name="get_mentor_relation.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/task3/get_mentor_relation.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="311">
-              <caret line="47" column="25" selection-start-line="47" selection-start-column="25" selection-end-line="47" selection-end-column="25" />
+            <state relative-caret-position="429">
+              <caret line="43" column="53" selection-start-line="43" selection-start-column="53" selection-end-line="43" selection-end-column="53" />
               <folding>
                 <element signature="e#25#37#0" expanded="true" />
               </folding>
@@ -32,21 +32,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="get_father_relation.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/task3/get_father_relation.py">
+      <file leaf-file-name="mentor.txt" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/task3/mentor.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="hand_classify.txt" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/task3/hand_classify.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="75">
-              <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+            <state relative-caret-position="200">
+              <caret line="8" column="8" selection-start-line="8" selection-start-column="8" selection-end-line="8" selection-end-column="8" />
               <folding />
             </state>
           </provider>
@@ -72,8 +62,9 @@
         <option value="$PROJECT_DIR$/task3/mentor.py" />
         <option value="$PROJECT_DIR$/GetAllNames.py" />
         <option value="$PROJECT_DIR$/task3/get_father_relation.py" />
-        <option value="$PROJECT_DIR$/task3/mentor.txt" />
         <option value="$PROJECT_DIR$/task3/hand_classify.txt" />
+        <option value="$PROJECT_DIR$/task2/extract_names.py" />
+        <option value="$PROJECT_DIR$/task3/mentor.txt" />
         <option value="$PROJECT_DIR$/task3/get_mentor_relation.py" />
       </list>
     </option>
@@ -109,8 +100,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
       <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -232,23 +223,6 @@
       <option name="SHOW_COMMAND_LINE" value="false" />
       <method />
     </configuration>
-    <configuration default="false" name="user_defined_dict_test" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/jieba" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="modern_db" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/jieba/user_defined_dict_test.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <method />
-    </configuration>
     <configuration default="false" name="get_all_person_name" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -296,6 +270,23 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="modern_db" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/one.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <method />
+    </configuration>
+    <configuration default="false" name="extract_names" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/task2" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="modern_db" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/task2/extract_names.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <method />
@@ -436,18 +427,18 @@
     </configuration>
     <list size="5">
       <item index="0" class="java.lang.String" itemvalue="Python.fenciTest" />
-      <item index="1" class="java.lang.String" itemvalue="Python.user_defined_dict_test" />
-      <item index="2" class="java.lang.String" itemvalue="Python.get_all_person_name" />
-      <item index="3" class="java.lang.String" itemvalue="Python.get_mentor_relation" />
-      <item index="4" class="java.lang.String" itemvalue="Python.one" />
+      <item index="1" class="java.lang.String" itemvalue="Python.get_all_person_name" />
+      <item index="2" class="java.lang.String" itemvalue="Python.get_mentor_relation" />
+      <item index="3" class="java.lang.String" itemvalue="Python.one" />
+      <item index="4" class="java.lang.String" itemvalue="Python.extract_names" />
     </list>
     <recent_temporary>
       <list size="5">
         <item index="0" class="java.lang.String" itemvalue="Python.get_mentor_relation" />
-        <item index="1" class="java.lang.String" itemvalue="Python.one" />
-        <item index="2" class="java.lang.String" itemvalue="Python.get_all_person_name" />
-        <item index="3" class="java.lang.String" itemvalue="Python.fenciTest" />
-        <item index="4" class="java.lang.String" itemvalue="Python.user_defined_dict_test" />
+        <item index="1" class="java.lang.String" itemvalue="Python.extract_names" />
+        <item index="2" class="java.lang.String" itemvalue="Python.one" />
+        <item index="3" class="java.lang.String" itemvalue="Python.get_all_person_name" />
+        <item index="4" class="java.lang.String" itemvalue="Python.fenciTest" />
       </list>
     </recent_temporary>
   </component>
@@ -506,7 +497,17 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/fenciTest.py">
+    <entry file="file://$PROJECT_DIR$/task3/get_mentor_relation.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#25#37#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/task3/get_father_relation.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
@@ -514,6 +515,15 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/task3/hand_classify.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fenciTest.py" />
     <entry file="file://D:/software/python27/Lib/site-packages/jieba/posseg/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="5475">
@@ -526,18 +536,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1850">
           <caret line="75" column="0" selection-start-line="73" selection-start-column="0" selection-end-line="75" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/fenciTest.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/fenciTest.py" />
     <entry file="file://D:/software/python27/Lib/site-packages/jieba/posseg/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="5475">
@@ -550,15 +552,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1850">
           <caret line="75" column="0" selection-start-line="73" selection-start-column="0" selection-end-line="75" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/data/names2.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="181">
-          <caret line="822" column="0" selection-start-line="822" selection-start-column="0" selection-end-line="822" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -582,6 +575,50 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="75">
           <caret line="3" column="12" selection-start-line="3" selection-start-column="12" selection-end-line="3" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/person_test">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fenciTest.py" />
+    <entry file="file://$PROJECT_DIR$/crawer.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="625">
+          <caret line="25" column="1" selection-start-line="25" selection-start-column="1" selection-end-line="25" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jieba/keyword_ie.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1639">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/task1/GetAllNames.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="304">
+          <caret line="62" column="25" selection-start-line="62" selection-start-column="25" selection-end-line="62" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-746">
+          <caret line="11" column="19" selection-start-line="11" selection-start-column="19" selection-end-line="11" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/one.py" />
+    <entry file="file://$PROJECT_DIR$/data/name_url_content.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="6" column="70" selection-start-line="0" selection-start-column="0" selection-end-line="1501" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -594,84 +631,28 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/data/person_test">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/fenciTest.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="200">
-          <caret line="8" column="29" selection-start-line="0" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/crawer.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="625">
-          <caret line="25" column="1" selection-start-line="25" selection-start-column="1" selection-end-line="25" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/jieba/keyword_ie.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1639">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/task1/GetAllNames.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="304">
-          <caret line="62" column="25" selection-start-line="62" selection-start-column="25" selection-end-line="62" selection-end-column="25" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-746">
-          <caret line="11" column="19" selection-start-line="11" selection-start-column="19" selection-end-line="11" selection-end-column="19" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/one.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="50">
-          <caret line="2" column="29" selection-start-line="2" selection-start-column="29" selection-end-line="2" selection-end-column="29" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/data/name_url_content.xml">
+    <entry file="file://$PROJECT_DIR$/data/name_result.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="150">
-          <caret line="6" column="70" selection-start-line="0" selection-start-column="0" selection-end-line="1501" selection-end-column="0" />
+          <caret line="6" column="9" selection-start-line="6" selection-start-column="9" selection-end-line="6" selection-end-column="9" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/task2/get_all_person_name.py">
+    <entry file="file://$PROJECT_DIR$/task2/extract_names.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="475">
-          <caret line="19" column="0" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
+        <state relative-caret-position="504">
+          <caret line="22" column="41" selection-start-line="22" selection-start-column="41" selection-end-line="22" selection-end-column="41" />
           <folding>
-            <element signature="e#24#39#0" expanded="false" />
+            <element signature="e#24#39#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/task3/mentor.txt">
+    <entry file="file://$PROJECT_DIR$/data/names2.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="50">
-          <caret line="2" column="6" selection-start-line="2" selection-start-column="6" selection-end-line="2" selection-end-column="6" />
+        <state relative-caret-position="125">
+          <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
           <folding />
         </state>
       </provider>
@@ -692,10 +673,26 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/task2/get_all_person_name.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="400">
+          <caret line="19" column="0" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/task3/mentor.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="200">
+          <caret line="8" column="8" selection-start-line="8" selection-start-column="8" selection-end-line="8" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/task3/get_mentor_relation.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="311">
-          <caret line="47" column="25" selection-start-line="47" selection-start-column="25" selection-end-line="47" selection-end-column="25" />
+        <state relative-caret-position="429">
+          <caret line="43" column="53" selection-start-line="43" selection-start-column="53" selection-end-line="43" selection-end-column="53" />
           <folding>
             <element signature="e#25#37#0" expanded="true" />
           </folding>

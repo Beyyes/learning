@@ -25,17 +25,24 @@ def get_result(content):
     # 改进方法，提取一句话，包含一些关键字
     three = content.split(' ')
     splits = three[2].split('。')
-    for spl in splits:
-        res = pseg.lcut(spl)
-        dict = {}
-        for i in range(0, len(res)):
-            if res[i].word.encode('utf-8') == '拜':
-                j = i
-                while j < len(res):
-                    if res[j].flag == 'nr':
-                        print res[j].word
-                        break
-                    j += 1
+    for spls in splits:
+        dotsplits = spls.split('，')
+        for spl in dotsplits:
+            res = pseg.lcut(spl)
+            dict = {}
+            for i in range(0, len(res)):
+                if res[i].word.encode('utf-8') == '拜':
+                    # print spl
+                    j = i
+                    while j < len(res):
+                        if res[j].flag == 'nr':
+                            # print res[j].word
+                            break
+                        j += 1
+                if res[i].word.encode('utf-8') == '师承':
+                    print spl
+                if res[i].word.encode('utf-8') == '师从':
+                    print spl
 
 if __name__ == '__main__':
      jieba.load_userdict('../data/dict.txt') #  加载用户自定义词典
@@ -46,6 +53,7 @@ if __name__ == '__main__':
          if num > 100:
              break
          get_result(line)
+         # print
 
 
 

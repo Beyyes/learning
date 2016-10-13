@@ -24,6 +24,7 @@ def judge(words_res):
 def get_result(content):
     # 改进方法，提取一句话，包含一些关键字
     three = content.split(' ')
+    print three[1] + ','
     splits = three[2].split('。')
     for spls in splits:
         dotsplits = spls.split('，')
@@ -31,8 +32,9 @@ def get_result(content):
             res = pseg.lcut(spl)
             dict = {}
             for i in range(0, len(res)):
-                if res[i].word.encode('utf-8') == '拜':
-                    # print spl
+                print res[i].word + " " + res[i].flag
+                if res[i].word.encode('utf-8') == '拜' or res[i].word.encode('utf-8') == '拜在':  # 注意区分拜前面的主语不是当前名字，但可能会有好多重名的
+                    print '##1:' + spl
                     j = i
                     while j < len(res):
                         if res[j].flag == 'nr':
@@ -40,15 +42,15 @@ def get_result(content):
                             break
                         j += 1
                 if res[i].word.encode('utf-8') == '师承':
-                    print spl
+                    print '##2:' + spl
                 if res[i].word.encode('utf-8') == '师从':
-                    print spl
+                    print '##3:' + spl
 
 if __name__ == '__main__':
      jieba.load_userdict('../data/dict.txt') #  加载用户自定义词典
      # file = open('../data/name_url_content.xml')
      num = 0
-     for line in open('../data/name_url_content.xml'):
+     for line in open('../data/temp.txt'):
          num += 1
          if num > 100:
              break

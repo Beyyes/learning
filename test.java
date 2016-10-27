@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * 
@@ -19,39 +20,113 @@ public class Main {
 
 
     static List<Point> points = null;
-    static int K = 3;
+    static int K = 4;
     static Map<Integer, ArrayList<Integer>> fatherRelation =
-            new HashMap<Integer, ArrayList<Integer>>();
+            new HashMap<Integer, ArrayList<Integer>>(); // 这个可以直接优化为HashSet
     static Map<Integer, ArrayList<Integer>> layerMap = new HashMap<Integer, ArrayList<Integer>>();
+
+    static List<Point> rePoints = new ArrayList<Point>();
+    static int maxLayer = 0;
     static ArrayList<Integer> oneUnitGroup = new ArrayList<Integer>();
-    
+    static int arrayMaxn = 1000;
+    static int num[] = new int[arrayMaxn];
+
     public static void main(String[] args) throws IOException {
         points = loadFileData("data/test.txt");
         Collections.sort(points);
-
+        for (int i = 0; i < points.size(); i++) {
+            num[i] = points.get(i).number;
+        }
         // 二维的可以二分，多维的必须一个个判断
         buildDSG();
-        System.out.println(fatherRelation.size());
+        // System.out.println(fatherRelation.size());
 
-//        for (Entry<Integer, ArrayList<Integer>> entry : fatherRelation.entrySet()) {
-//            ArrayList<Integer> cList = entry.getValue();
-//            System.out.println("son: " + points.get(entry.getKey()).number);
-//            for (int i : cList) {
-//                System.out.println(points.get(i).number);
-//            }
-//            System.out.println("----------");
-//        }
-        
-        
-        
+        // for (Entry<Integer, ArrayList<Integer>> entry : fatherRelation.entrySet()) {
+        // ArrayList<Integer> cList = entry.getValue();
+        // System.out.println("son: " + points.get(entry.getKey()).number);
+        // for (int i : cList) {
+        // System.out.println(points.get(i).number);
+        // }
+        // System.out.println("----------");
+        // }
+
+        // unit group reordering
+        for (int i = maxLayer; i >= 1; i--) {
+            ArrayList<Integer> arrays = layerMap.get(i);
+            for (int j = arrays.size() - 1; j >= 0; j--) {
+                // 下面的判断可能有优化？
+                if (fatherRelation.containsKey(arrays.get(j))
+                        && fatherRelation.get(arrays.get(j)).size() + 1 == K) {
+                    System.out.println("MEET:");
+                    System.out.println("u" + points.get(arrays.get(j)).number);
+                } else if (fatherRelation.containsKey(arrays.get(j))
+                        && fatherRelation.get(arrays.get(j)).size() + 1 > K) {
+                    continue;
+                } else {
+                    rePoints.add(new Point(arrays.get(j), points.get(arrays.get(j)).x));
+                    oneUnitGroup.add(arrays.get(j));
+                }
+            }
+        }
+
+        for (int pos = 0; pos < oneUnitGroup.size(); pos++) {   // oneUnitGroup存的下标就是排序后的坐标
+            // Subset Pruning, 检查 Gi(last)
+
+            UnitGroup group = new UnitGroup();
+            group.fathers.add(oneUnitGroup.get(pos)); // 添加当前节点
+            if (fatherRelation.containsKey(oneUnitGroup.get(pos))) {
+                group.fathers.addAll(fatherRelation.get(oneUnitGroup.get(pos)));
+            }
+
+            for (int tail = pos + 1; tail < oneUnitGroup.size(); tail++)
+                dfsUWise(group, tail);
+        }
+
     }
 
-    public static void uWise() {
-        
+    public static void dfsUWise(UnitGroup group, int pos) {
+        if (pos >= oneUnitGroup.size())
+            return;
+
+        HashSet<Integer> parentSet = new HashSet<Integer>();
+        parentSet.addAll(group.fathers);
+
+        parentSet.add(rePoints.get(pos).number);
+        if (fatherRelation.containsKey(rePoints.get(pos).number)) {
+            parentSet.addAll(fatherRelation.get(rePoints.get(pos).number));
+        }
+
+        group.fathers = parentSet; // 不需UnitGroup，只需HashSet即可
+
+        if (group.fathers.size() == K) {
+            // System.out.println(group.fathers);
+            for (int x : group.fathers) {
+                System.out.print(num[x] + " ");
+            }
+            System.out.println();
+            return;
+        } else if (group.fathers.size() > K) {
+            return;
+        }
+
+        for (int tail = pos + 1; tail < oneUnitGroup.size(); tail++) {
+            // tail set的点在父结点里
+            if (parentSet.contains(oneUnitGroup.get(tail))) {
+                continue;
+            } else {
+                dfsUWise(group, tail);
+            }
+        }
+
+        // for (int i : parentSet) {
+        // System.out.print(num[i] + " ");
+        // }
+        // System.out.println();
+
     }
-    
+
     public static void buildDSG() {
-        int maxLayer = 1;
+        maxLayer = 1;
         layerMap.put(1, new ArrayList<Integer>());
         layerMap.get(1).add(0);
         for (int pos = 1; pos < points.size(); pos++) {
@@ -166,12 +241,12 @@ public class Main {
             return -1;
         }
     }
-    
+
     static class UnitGroup {
-        public HashSet<Integer> fatherNodes = new HashSet<Integer>();
-        public ArrayList 
+        public HashSet<Integer> fathers = new HashSet<Integer>();
+        public ArrayList<Integer> nodes = new ArrayList<Integer>();
     }
-    
+
     public static boolean dominate(int pos1, int pos2) { // dominate的定义还需要注意
         Point p1 = points.get(pos1);
         Point p2 = points.get(pos2);

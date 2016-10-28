@@ -28,15 +28,18 @@ public class Main {
     static List<Point> rePoints = new ArrayList<Point>();
     static int maxLayer = 0;
     static ArrayList<Integer> oneUnitGroup = new ArrayList<Integer>();
-    static int arrayMaxn = 1000;
+    static int arrayMaxn = 100000;
     static int num[] = new int[arrayMaxn];
-
+    static String filePath = "data/anti_8.txt";
+    
     public static void main(String[] args) throws IOException {
-        points = loadFileData("data/test.txt");
+        points = loadFileData(filePath);
         Collections.sort(points);
         for (int i = 0; i < points.size(); i++) {
             num[i] = points.get(i).number;
+            // System.out.print(i + "--" + num[i] + "\n");
         }
+        
         // 二维的可以二分，多维的必须一个个判断
         buildDSG();
         // System.out.println(fatherRelation.size());
@@ -77,7 +80,8 @@ public class Main {
             if (fatherRelation.containsKey(oneUnitGroup.get(pos))) {
                 group.fathers.addAll(fatherRelation.get(oneUnitGroup.get(pos)));
             }
-
+            
+            // 如果当前就有4个father nodes了直接输出
             for (int tail = pos + 1; tail < oneUnitGroup.size(); tail++)
                 dfsUWise(group, tail);
         }
@@ -87,34 +91,39 @@ public class Main {
     public static void dfsUWise(UnitGroup group, int pos) {
         if (pos >= oneUnitGroup.size())
             return;
-
+        
         HashSet<Integer> parentSet = new HashSet<Integer>();
         parentSet.addAll(group.fathers);
 
-        parentSet.add(rePoints.get(pos).number);
-        if (fatherRelation.containsKey(rePoints.get(pos).number)) {
-            parentSet.addAll(fatherRelation.get(rePoints.get(pos).number));
+        //parentSet.add(oneUnitGroup.get(pos));
+        if (parentSet.contains(oneUnitGroup.get(pos))) {  // 父结点包含
+        	return;
+        } else {
+        	parentSet.add(oneUnitGroup.get(pos));
+        	if(fatherRelation.containsKey(oneUnitGroup.get(pos)))
+        		parentSet.addAll(fatherRelation.get(oneUnitGroup.get(pos)));
         }
 
-        group.fathers = parentSet; // 不需UnitGroup，只需HashSet即可
+        UnitGroup newGroup = new UnitGroup();
+        newGroup.fathers = parentSet; // 不需UnitGroup，只需HashSet即可
 
-        if (group.fathers.size() == K) {
+        if (newGroup.fathers.size() == K) {
             // System.out.println(group.fathers);
-            for (int x : group.fathers) {
-                System.out.print(num[x] + " ");
-            }
-            System.out.println();
+//            for (int x : newGroup.fathers) {
+//                System.out.print(x + " ");
+//            }
+//            System.out.println();
             return;
-        } else if (group.fathers.size() > K) {
+        } else if (newGroup.fathers.size() > K) {
             return;
         }
 
         for (int tail = pos + 1; tail < oneUnitGroup.size(); tail++) {
             // tail set的点在父结点里
-            if (parentSet.contains(oneUnitGroup.get(tail))) {
+            if (newGroup.fathers.contains(oneUnitGroup.get(tail))) {
                 continue;
             } else {
-                dfsUWise(group, tail);
+                dfsUWise(newGroup, tail);
             }
         }
 

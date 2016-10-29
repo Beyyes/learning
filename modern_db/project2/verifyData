@@ -1,0 +1,97 @@
+//package skyline;
+//
+//import java.io.BufferedReader;
+//import java.io.FileOutputStream;
+//import java.io.FileReader;
+//import java.io.IOException;
+//import java.io.PrintStream;
+//import java.util.ArrayList;
+//import java.util.Collections;
+//import java.util.HashSet;
+//import java.util.List;
+//
+//import skyline.test2.Point;
+//
+//public class verifyData {
+//    
+//    static String filePath = "data/anti_4.txt";
+//    static List<Point> points = null;
+//    
+//    public static void main(String[] args) throws IOException {
+//        points = loadFileData(filePath);
+//        HashSet<Double> h = new HashSet<Double>();
+//        for(int i = 0;i < points.size();i++) {
+//            if(h.contains(points.get(i).x[0]))
+//                System.out.println("!!" + points.get(i).x[0]);
+//            h.add(points.get(i).x[0]);
+//        }
+//    }
+//    
+//    public static ArrayList<Point> loadFileData(String filePath) throws IOException {
+//        ArrayList<Point> ans = new ArrayList<Point>();
+//        BufferedReader reader = null;
+//        reader = new BufferedReader(new FileReader(filePath));
+//        String line = "";
+//        int cnt = 0;
+//        while ((line = reader.readLine()) != null) {
+//            String[] values = line.split(" ");
+//            double[] x = new double[values.length];
+//            for (int i = 0; i < values.length; i++) {
+//                x[i] = Double.parseDouble(values[i]);
+//            }
+//            Point p = new Point(++cnt, x);
+//            ans.add(p);
+//        }
+//        reader.close();
+//        return ans;
+//    }
+//    
+//    points = loadFileData(filePath);
+//
+//    long starTime = System.currentTimeMillis();
+//    Collections.sort(points);
+//    for (int i = 0; i < points.size(); i++) {
+//        num[i] = points.get(i).number;
+//        // System.out.print(i + "--" + num[i] + "\n");
+//    }
+//
+//    // two dimension : binary search | higher
+//    buildDSG();
+//    // buildDSG();
+//    PrintStream ps=new PrintStream(new FileOutputStream("data/work"));  
+//    System.setOut(ps); 
+//    HashSet<Double> h = new HashSet<Double>();
+//    for(Point p : points) {
+//        if(h.contains(p.x[0])) {
+//            System.out.println("!!" + p.x[0]);
+//        } else {
+//            h.add(p.x[0]);
+//        }
+//        for(int i = 0;i < p.count;i++) {
+//            System.out.print(p.x[i]+" ");
+//        }
+//        System.out.println();
+//    }
+//
+//}
+//
+//
+
+//        int cnt = 0;
+//        for(int i = 0;i < oneUnitGroup.size();i++) {
+//            if(fatherRelation.containsKey(oneUnitGroup.get(i))) {
+//                System.out.println(oneUnitGroup.get(i) + "->" + fatherRelation.get(oneUnitGroup.get(i)).size());
+//                cnt++;
+//            }
+//            
+//        }
+//        System.out.println("有father的数量：" + cnt);
+
+        // for (Entry<Integer, ArrayList<Integer>> entry : fatherRelation.entrySet()) {
+        // ArrayList<Integer> cList = entry.getValue();
+        // System.out.println("son: " + points.get(entry.getKey()).number);
+        // for (int i : cList) {
+        // System.out.println(points.get(i).number);
+        // }
+        // System.out.println("----------");
+        // }

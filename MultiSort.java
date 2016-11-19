@@ -25,10 +25,7 @@ public class MultiSort {
 
 	public static void main(String[] args) throws IOException {
 		byte[] array = new byte[8];
-		int cnt = 0;
-		int fileEnd = 0;
 
-		int cycNum = fileEnd;
 		for (int i = 1; i <= M; i++) {
 			ins[i] = new DataInputStream(new FileInputStream(file + String.valueOf(i)));
 		}

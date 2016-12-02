@@ -37,6 +37,7 @@ fig.set(alpha=0.2)
 # plt.title('income')  # 收入>50K与<50K分布
 # plt.ylabel('number')
 # plt.show()
+#
 
 # 收入与年龄分布图
 # bins = np.linspace(10,90,20)

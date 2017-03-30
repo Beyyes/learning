@@ -232,5 +232,5 @@ public final class FilterFactory {
 		} else {
 			return csOr(left, right);
 		}
-	}
+	} 
 }

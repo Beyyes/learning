@@ -1,201 +1,64 @@
 /**
 * K-means Algorithm Implemantation using MPI
+
 * @author CGF
 * 
 */
 #include <iostream>
 #include <stdio.h>
-#include "stdlib.h"
 #include <time.h>
 #include <math.h>
+#include "stdlib.h"
 #include "mpi.h"
 
 using namespace std;
 
-#define MASTER 0
 
-/**
-* Point Defination
-*/
 typedef struct 
 {
-	double _x;
-	double _y;
+	double x, y;
 } Point;
 
-/**
-* reader function of the input file's first(for number of clusters)  
-* & second(for number of points) line
-* @param input input file handler
-* @param num_clusters pointer to return number of clusters
-* @param num_points pointer to return number of points	
-*/
-void readHeaders(FILE *input,int* num_clusters,int* num_points)
-{
-	fscanf(input,"%d\n",num_clusters);
-	printf("%d\n",*num_clusters);
+const int MASTER = 0;
 
-	fscanf(input,"%d\n",num_points);
-	printf("%d\n",*num_points);
-}
+static int num_points;
+
+static int num_clusters;
 
 /**
-* reader function of the points in the input file
-* This function must be called after  readHeaders(...) function
-* @param input input file handler
-* @param points pointer to return the array of points
-* @param num_points number of points to read
-*/
-void readPoints(FILE* input,Point *points,int num_points)
-{
-	int dex;
-	for(dex=0;dex<num_points;dex++)
-	{
-		fscanf(input,"%lf,%lf",&points[dex]._x,&points[dex]._y);
-	}
-}
-/**
-* initializer function that randomly initialize the centroids
-* @param centroids pointer to return array of centroids
-* @param num_cluster number of clusters(so number of centroids, too)
-*/
-void initialize(Point* centroids,int num_clusters)
-{
-	int dex;
-	srand(time(NULL));
-	for(dex=0;dex<num_clusters;dex++)
-	{
-		centroids[dex]._x=((double)(rand()%1000))/1000;
-		centroids[dex]._y=((double)(2*rand()%1000))/1000;
-	}
-}
-/**
-* initializer function that initializes the all cluster array values to -1
-* @param data pointer to return array of cluster data
-* @param num_points number of points to initialize
-*/
-void resetData(int *data,int num_points)
-{
-	int dex;
-	for(dex=0;dex<num_points;dex++)
-	{
-		data[dex]=-1;
-	}		
-}
-/**
-* calculate distance between two points
-* @param point1 first point
-* @param point2 second point
-* @return distance in double precision
-*/
-double calculateDistance(Point point1,Point point2)
-{
-	return (pow((point1._x-point2._x)*100,2)+pow((point1._y-point2._y)*100,2));	
-}
-/**
-* Wierd name but essential function; decides witch centroid is closer to the given point
-* @param point point given
-* @param centroids pointer to centroids array
-* @param num_centroids number of centroids to check
-* @return closest centroid's index in centroids array(2nd param)
-*/
-int whoIsYourDaddy(Point point,Point* centroids,int num_centroids)
-{
-	int daddy=0;
-	double distance=0;
-	double minDistance=calculateDistance(point,centroids[0]);
-	int dex;
+* calc the distance between two points
+**/
+double calcDistance(Point p1, Point p2);
 
-	for(dex=1;dex<num_centroids;dex++)
-	{	
-		distance=calculateDistance(point,centroids[dex]);
-		if(minDistance>=distance)
-		{
-			daddy=dex;
-			minDistance=distance;
-		}
-	}
-	return daddy;
-}
 /**
-* Cumulative function that must be called after the closest centroid for each point is found
-* Calculates new centroids as describen in kmeans algorithm
-* @param points array of points
-* @param data array of cluster assignments
-* @param centroids return array of centroids
-* @param num_clusters number of clusters(so number of centroids)
-* @param num_points number of points 
-*/
-void calculateNewCentroids(Point* points,int* data,Point* centroids,int num_clusters,int num_points)
-{
-	Point* newCentroids=(Point*)malloc(sizeof(Point)*num_clusters);
-	int* population=(int*)malloc(sizeof(int)*num_clusters);
-	int i;
+* to determine the center of a point
+**/
+int judgeCenters(Point point, Point* centers);
 
-	for(i=0;i<num_clusters;i++)
-	{
-		population[i]=0;
-		newCentroids[i]._x=0;
-		newCentroids[i]._y=0;
-	}	
-	for(i=0;i<num_points;i++)
-	{
-		population[data[i]]++;
-		newCentroids[data[i]]._x+=points[i]._x;
-		newCentroids[data[i]]._y+=points[i]._y;
-	}
-	for(i=0;i<num_clusters;i++)
-	{
-		if(population[i]!=0.0)
-		{
-			newCentroids[i]._x/=population[i];
-			newCentroids[i]._y/=population[i];
-		}
-	}
-	for(i=0;i<num_clusters;i++)
-	{
-		centroids[i]._x=newCentroids[i]._x;
-		centroids[i]._y=newCentroids[i]._y;
-	}	
-}
 /**
-* Convergence checker (see project description for further info)
-* @param former_clusters pointer to array of older cluster assignments
-* @param latter_clusters pointer to array of newer cluster assignments
-* @param num_points number of points 
-* @return -1 if not converged, 0 if converged.
-*/
-int checkConvergence(int *former_clusters,int *latter_clusters,int num_points)
-{
-	int dex;
-	for(dex=0;dex<num_points;dex++)
-		if(former_clusters[dex]!=latter_clusters[dex])
-			return -1;
-	return 0;
-}
+* to determine the center of the new cluster
+**/
+void calcNewcenters(Point* points, int* new_cluster, Point* centers);
+
 /**
-* main function
-* divided to two brances for master & slave processors respectively
-* @param argc commandline argument count
-* @param argv array of commandline arguments
-* @return 0 if success
-*/
+* check the old data and new data to determine if convergence
+**/
+bool check(int* older_clusters, int* newer_clusters);
+
 int main(int argc, char* argv[])
 {
-	int rank;
-	int size;
-	int num_clusters;  // 聚类数目
-	int num_points;
-	int dex;
-	int job_size;
-	int job_done=0;
 
-	Point* centroids;
-	Point* points;
+	int i;
+	int rank, size;
+	int part_size;     // number of points of each cluster
+	int done_flag = 0; // to determine whether the algorithm is completed
+
+	Point* centers;
+	Point* all_points;
 	Point* received_points;
-	int  * slave_clusters;
-	int  * former_clusters;
-	int  * latter_clusters;
+	int  * slave_clusters;  // represent the center of each slave points
+	int  * older_clusters;
+	int  * newer_clusters;
 
 	MPI_Init(&argc, &argv);
 
@@ -204,47 +67,62 @@ int main(int argc, char* argv[])
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 	MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-	//creation of derived MPI structure
+	// derived MPI structure
 	MPI_Datatype MPI_POINT;
-	MPI_Datatype type=MPI_DOUBLE;
-	int blocklen=2;
-	MPI_Aint disp=0;
-	MPI_Type_create_struct(1,&blocklen,&disp,&type,&MPI_POINT);
+	MPI_Datatype type = MPI_DOUBLE;
+	int blocklen = 2;
+	MPI_Aint disp = 0;
+	MPI_Type_create_struct(1, &blocklen, &disp, &type, &MPI_POINT);
 	MPI_Type_commit(&MPI_POINT);
 
-	/******** MASTER PROCESSOR WORKS HERE******************************************************/ 
-
-	if(rank==MASTER)
+	// Sending data to slave
+	if(rank == MASTER)
 	{
-		//inputting from file
+		// input data
 		FILE *input;
-		input=fopen(argv[1],"r");
-		readHeaders(input,&num_clusters,&num_points);
-		points=(Point*)malloc(sizeof(Point)*num_points);
-		readPoints(input,points,num_points);
+		input = fopen(argv[1], "r");
+
+		fscanf(input, "%d\n", &num_clusters);
+		printf("%d\n", num_clusters);
+		fscanf(input, "%d\n", &num_points);
+		printf("%d\n", num_points);
+		
+		all_points = new Point[num_points]; 
+		for(int i = 0;i < num_points;i++)
+		{
+			fscanf(input, "%lf,%lf", &all_points[i].x, &all_points[i].y);
+		}
 		fclose(input);
 
-		//other needed memory locations
-		former_clusters=(int*)malloc(sizeof(int)*num_points);
-		latter_clusters=(int*)malloc(sizeof(int)*num_points);
-		job_size=num_points/(size-1);   // job_size 每个聚类的点数目
-		centroids=(Point*)malloc(sizeof(Point)*num_clusters);  // 每个聚类簇中心
+		older_clusters = new int[num_points];
+		newer_clusters = new int[num_points];
+		part_size = num_points / (size-1);  
+		centers = new Point[num_clusters]; 
 
-		//reseting and initializing to default behaviour		
-		initialize(centroids,num_clusters);
-		resetData(former_clusters,num_points);
-		resetData(latter_clusters,num_points);
-
-		// 将数据分发到不同的进程
-		for(dex=1;dex<size;dex++)
+		// data init and centers srand		
+		srand(time(NULL));
+		for(int i = 0;i < num_clusters;i++)
 		{
-			printf("Sending to [%d]\n",dex);
-			MPI_Send(&job_size              ,1           , MPI_INT        ,dex,0,MPI_COMM_WORLD);
-			MPI_Send(&num_clusters          ,1           , MPI_INT        ,dex,0,MPI_COMM_WORLD);
-			MPI_Send(centroids              ,num_clusters, MPI_POINT      ,dex,0,MPI_COMM_WORLD);
-			MPI_Send(points+(dex-1)*job_size,job_size    , MPI_POINT      ,dex,0,MPI_COMM_WORLD);
+			centers[i].x = ((double)(rand()%1000))/1000;
+			centers[i].y = ((double)(2*rand()%1000))/1000;
 		}
-		printf("Send Complete!\n");
+
+		for(int i = 0;i < num_points;i++)
+		{
+			older_clusters[i] = -1;
+			newer_clusters[i] = -1;
+		}
+
+		// send data to different processor
+		for(int i = 1;i < size;i++)
+		{
+			printf("Sending to [%d] \n",i);
+			MPI_Send(&part_size, 1, MPI_INT, i, 0, MPI_COMM_WORLD);
+			MPI_Send(&num_clusters, 1, MPI_INT, i, 0, MPI_COMM_WORLD);
+			MPI_Send(centers, num_clusters, MPI_POINT, i, 0, MPI_COMM_WORLD);
+			MPI_Send(all_points+(i-1) * part_size, part_size, MPI_POINT, i, 0, MPI_COMM_WORLD);
+		}
+		cout<<"Send Complete!"<<endl;
 
 		MPI_Barrier(MPI_COMM_WORLD);
 
@@ -252,94 +130,163 @@ int main(int argc, char* argv[])
 		while(1)
 		{	
 			MPI_Barrier(MPI_COMM_WORLD);
+			cout <<"Master Receiving"<<endl;
+			for(int i = 1;i < size;i++)
+				MPI_Recv(newer_clusters + (part_size*(i-1)), part_size, MPI_INT, i, 0, MPI_COMM_WORLD, &status);
+			cout<<"Master Received"<<endl;
 
-			printf("Master Receiving\n");
-			for(dex=1;dex<size;dex++)
-				MPI_Recv(latter_clusters+(job_size*(dex-1)),job_size,MPI_INT,dex,0,MPI_COMM_WORLD,&status);
-
-			printf("Master Received\n");
-
-			calculateNewCentroids(points,latter_clusters,centroids,num_clusters,num_points);
-			printf("New Centroids are done!\n");
-			if(checkConvergence(latter_clusters,former_clusters,num_points)==0)
+			calcNewcenters(all_points, newer_clusters, centers);
+			cout<<"New centers are done!"<<endl;
+			if(check(newer_clusters, older_clusters))
 			{
-				printf("Converged!\n");
-				job_done=1;
+				cout<<"Converge."<<endl;
+				done_flag = 1;
 			}
 			else    
 			{
-				printf("Not converged!\n");
-				for(dex=0;dex<num_points;dex++)
-					former_clusters[dex]=latter_clusters[dex];
+				cout<<"Not converge"<<endl;
+				for(int i = 0;i < num_points;i++)
+					older_clusters[i] = newer_clusters[i];
 			}
 
-			//Informing slaves that no more job to be done
-			for(dex=1;dex<size;dex++)
-				MPI_Send(&job_done,1, MPI_INT,dex,0,MPI_COMM_WORLD);
+			// all centers converge
+			for(int i = 1;i < size;i++)
+				MPI_Send(&done_flag, 1, MPI_INT, i, 0, MPI_COMM_WORLD);
 
 			MPI_Barrier(MPI_COMM_WORLD);
-			if(job_done==1)
+			if(done_flag == 1)
 				break;
 
-			//Sending the recently created centroids			
-			for(dex=1;dex<size;dex++)
-				MPI_Send(centroids,num_clusters, MPI_POINT,dex,0, MPI_COMM_WORLD);
+			// Sending the recently created centers			
+			for(int i = 1;i < size;i++)
+				MPI_Send(centers, num_clusters, MPI_POINT, i, 0, MPI_COMM_WORLD);
 
 			MPI_Barrier(MPI_COMM_WORLD);
 		}
 
-		//Outputting to the output file		
-		FILE* output=fopen(argv[2],"w");
-		fprintf(output,"%d\n",num_clusters);
-		fprintf(output,"%d\n",num_points);
-		for(dex=0;dex<num_clusters;dex++)
-			fprintf(output,"%lf,%lf\n",centroids[dex]._x,centroids[dex]._y);
-		for(dex=0;dex<num_points;dex++)
-			fprintf(output,"%lf,%lf,%d\n",points[dex]._x,points[dex]._y,latter_clusters[dex]+1);
+		// output result		
+		FILE* output = fopen(argv[2], "w");
+		fprintf(output, "%d\n", num_clusters);
+		fprintf(output, "%d\n", num_points);
+		for(i = 0;i < num_clusters;i++)
+			fprintf(output, "%lf,%lf\n", centers[i].x, centers[i].y);
+		for(i = 0;i < num_points;i++)
+			fprintf(output, "%lf,%lf,%d\n", all_points[i].x, all_points[i].y, newer_clusters[i]+1);
 		fclose(output);
 	}
-	/*************END OF MASTER PROCESSOR'S BRANCH -- SLAVE PROCESSORS' JOB IS TO FOLLOW ************************/
 	else
 	{
-		//Receiving the essential data
-		printf("Receiving\n");
-		MPI_Recv(&job_size    ,1           ,MPI_INT  ,MASTER,0,MPI_COMM_WORLD,&status);
-		MPI_Recv(&num_clusters,1           ,MPI_INT  ,MASTER,0,MPI_COMM_WORLD,&status);
-		centroids=(Point*)malloc(sizeof(Point)*num_clusters);
-		MPI_Recv(centroids    ,num_clusters,MPI_POINT,MASTER,0,MPI_COMM_WORLD,&status);
-		printf("part_size =%d\n",job_size);
-		received_points=(Point*)malloc(sizeof(Point)*job_size);
-		slave_clusters=(int*)malloc(sizeof(int)*job_size);
-		MPI_Recv(received_points,job_size,MPI_POINT      ,MASTER,0,MPI_COMM_WORLD,&status);
-		printf("Received [%d]\n",rank);
+		// Receiving data.
+		cout<<"Receiving"<<endl;
+		MPI_Recv(&part_size, 1, MPI_INT, MASTER, 0, MPI_COMM_WORLD, &status);
+		MPI_Recv(&num_clusters, 1, MPI_INT, MASTER, 0, MPI_COMM_WORLD, &status);
+		centers = new Point[num_clusters];
+		MPI_Recv(centers, num_clusters, MPI_POINT, MASTER, 0, MPI_COMM_WORLD, &status);
+		printf("part_size = %d\n", part_size);
+		received_points = new Point[part_size];
+		slave_clusters = new int[part_size];
+		MPI_Recv(received_points, part_size, MPI_POINT, MASTER, 0, MPI_COMM_WORLD, &status);
+		printf("Received [%d]\n", rank);
 
 		MPI_Barrier(MPI_COMM_WORLD);
 
 		while(1)
 		{
 			printf("Calculation of new clusters [%d]\n",rank);
-			for(dex=0;dex<job_size;dex++)
+			for(int i = 0; i < part_size; i++)
 			{
-				slave_clusters[dex]=whoIsYourDaddy(received_points[dex],centroids,num_clusters);
+				slave_clusters[i] = judgeCenters(received_points[i], centers);
 			}
 
 			printf("sending to master [%d]\n",rank);
-			MPI_Send(slave_clusters,job_size, MPI_INT,MASTER, 0, MPI_COMM_WORLD);
+			MPI_Send(slave_clusters, part_size, MPI_INT, MASTER, 0, MPI_COMM_WORLD);
 			MPI_Barrier(MPI_COMM_WORLD);
 			MPI_Barrier(MPI_COMM_WORLD);
-			MPI_Recv(&job_done,1, MPI_INT,MASTER,0,MPI_COMM_WORLD,&status);
+			MPI_Recv(&done_flag, 1, MPI_INT, MASTER, 0, MPI_COMM_WORLD, &status);
 
-			if(job_done==1) //No more work to be done
+			if(done_flag == 1) 
 				break;
 
-			//Receiving recently created centroids from master
-			MPI_Recv(centroids,num_clusters,MPI_POINT,MASTER,0, MPI_COMM_WORLD,&status);
+			//Receiving recently created centers from master
+			MPI_Recv(centers, num_clusters, MPI_POINT, MASTER, 0, MPI_COMM_WORLD, &status);
 
 			MPI_Barrier(MPI_COMM_WORLD);
 		}
 	}
-	//End of all	
 	MPI_Finalize();
 	return 0;
 }
-/* EOF */
+
+
+double calcDistance(Point p1, Point p2)
+{
+	return (pow((p1.x-p2.x)*100,2) + pow((p1.y-p2.y)*100,2));	
+}
+
+int judgeCenters(Point point, Point* centers)
+{
+	int ans = 0;
+	double distance = 0;
+	double minDistance = calcDistance(point, centers[0]);
+
+	for(int i = 1;i < num_clusters;i++)
+	{	
+		distance = calcDistance(point, centers[i]);
+		if(minDistance >= distance)
+		{ 
+			ans = i;
+			minDistance = distance;
+		}
+	}
+	return ans;
+}
+
+
+void calcNewcenters(Point* points, int* new_cluster, Point* centers)
+{
+	Point* newcenters = new Point[num_clusters];
+	int* count = new int[num_clusters];
+	
+	for(int i = 0;i < num_clusters;i++)
+	{
+		count[i] = 0;
+		newcenters[i].x = 0;
+		newcenters[i].y = 0;
+	}	
+
+	for(int i = 0;i < num_points;i++) 
+	{
+		count[new_cluster[i]]++;
+		newcenters[new_cluster[i]].x += points[i].x;
+		newcenters[new_cluster[i]].y += points[i].y;
+	}
+
+	for(int i = 0;i < num_clusters;i++)
+	{
+		if(count[i] != 0.0)
+		{
+			newcenters[i].x /= count[i];
+			newcenters[i].y /= count[i];
+		}
+	}
+
+	for(int i = 0;i < num_clusters;i++)
+	{
+		centers[i].x = newcenters[i].x;
+		centers[i].y = newcenters[i].y;
+	}	
+
+	delete []count;
+	delete []newcenters;
+}
+
+
+bool check(int *older_clusters, int *newer_clusters)
+{
+	for(int i = 0;i < num_points;i++)
+		if(older_clusters[i] != newer_clusters[i])
+			return false;
+	return true;
+}
+
+

@@ -5,6 +5,7 @@
 * 
 */
 #include <iostream>
+#include <vector>
 #include <stdio.h>
 #include <time.h>
 #include <math.h>
@@ -75,6 +76,11 @@ int main(int argc, char* argv[])
 	MPI_Type_create_struct(1, &blocklen, &disp, &type, &MPI_POINT);
 	MPI_Type_commit(&MPI_POINT);
 
+	time_t start_time, stop_time;
+    start_time = time(NULL);
+    // foo();//dosomething
+
+	// clock;
 	// Sending data to slave
 	if(rank == MASTER)
 	{
@@ -163,6 +169,9 @@ int main(int argc, char* argv[])
 
 			MPI_Barrier(MPI_COMM_WORLD);
 		}
+
+		stop_time = time(NULL);
+		printf("Use Time:%ld\n",(stop_time - start_time));
 
 		// output result		
 		FILE* output = fopen(argv[2], "w");
@@ -283,6 +292,7 @@ void calcNewcenters(Point* points, int* new_cluster, Point* centers)
 
 bool check(int *older_clusters, int *newer_clusters)
 {
+	// may be optimized only by comparance of k centers
 	for(int i = 0;i < num_points;i++)
 		if(older_clusters[i] != newer_clusters[i])
 			return false;

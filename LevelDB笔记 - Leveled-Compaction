@@ -1,0 +1,52 @@
+链接：https://github.com/imjoey/blog/issues/6
+
+前言
+LevelDB是Google出品的具有读写高性能的存储引擎，其没有采用传统的B+ Tree（MySQL InnoDB）的存储模型，而是使用了LSM（Log Structure Merge-Tree)。LSM模型中的一个重要组成就是称作SSTable（Sorted String Table）的结构。本文先简单介绍LSM中使用的几种结构，然后着重介绍在众多Compaction算法中的Leveled-Compaction。
+
+LSM
+LSM是通过将磁盘的随机写改为顺序写来提高写的性能，核心思想是把数据的添加或修改放到内存中，当内存中数据达到一定size后，然后dump（也就是变成了顺序写）到磁盘中。LSM中有MemTable、ImmutableMemTable、SSTable等几个概念，下面分别介绍
+
+MemTable
+MemTable在内存中，记录最近修改的数据。一般其内部使用SkipList结构存储按key排序后的有序数据，当其存储的数据达到一定size后，就变成ImmutableMemTable，同时新建一个新的MemTable；后续的数据修改操作均在新的MemTable内进行。
+
+ImmutableMemTable
+ImmutableMemTable就是只读不写的MemTable，它与MemTable一起保证的写操作无锁化。其内部的数据是有序的，所以dump到磁盘时保证了高效的顺序写，形成了新的SSTable文件。
+
+SSTable
+SSTable内存储的是一系列的有序键值对，形式如下图所示。当SSTable文件较大时，为了提高读的性能，也可以生成key-offset索引，此索引一般都记录在内存中。
+
+SSTable Compaction
+由于不断有ImmutableMemTable会dump到磁盘中成为新的SSTable文件，所以SSTable文件的数量会逐渐增多，其内部存储的数据也会产生很多过期数据（key的旧数据），所以需要对SSTable文件进行定期Compaction，一方面减少SSTable文件的数量，同时也删除过期的数据。
+
+SSTable Compaction有多种算法，比如Cassandra默认的基于文件大小的Size-Tired Compaction、基于时间序列的Date-Tiered Compaction，以及Leveled Compaction。
+
+这里主要以Cassandra中的Leveled Compaction算法为例来分析（这也是LevelDB名字的由来）。
+
+Leveled Compaction
+SSTable被划分到不同的level中，详细的Leveled Compaction算法描述如下：
+
+每个SSTable文件的固定大小为160M
+
+从ImmutableMemTable创建的SSTable文件划分到Level-0中
+
+每个Level有SSTable文件数量的限制。在除了Level-0的任意Level中，两级Level之间的SSTable文件数量呈指数级倍数。比如：Level-1中有10个SSTable文件，Level-2有100个SSTable文件
+
+在除了Level-0的任意Level中，SSTable文件之间所包含的key的范围不重叠。（也就是说，每个Level的所有SSTable文件，可以看做是一个大的SSTable文件）
+
+如果Level-0中SSTable数量超过限制（比如：4），那么自动回将这4个Level-0的SSTable文件与Level-1的所有10个SSTable文件进行Compaction。
+
+在Compaction过程中，首先对所有的SSTable文件按key进行归并排序，然后将排序后结果写入到新的SSTable文件中，如果SSTable文件大小到了160M上限，就新生成SSTable继续写。如此类推，直到写完所有数据。
+
+删除参与Compaction的Level-0的4个和Level-1的10个旧的SSTable文件
+
+此时Level-0的SSTable便merge到Level-1中了，那么如果Level-1的SSTable文件数量超过上限，那么就从Level-1中选出 1 个超量的SSTable文件，然后将其与Level-2中的SSTable文件进行Compaction。
+
+查看选出的Level-1 SSTable文件中key的范围
+
+从Level-2中选出能覆盖该范围的所有SSTable文件
+
+将以上的所有SSTable文件根据上面介绍的算法继续进行Compaction
+
+注：一般情况下，Level-1和Level-2的Compaction，只会涉及Level-2内大概1/10的SSTable文件，这样可以大幅降低参与Compcation的SSTable文件数量（相比于Size-Tired Compaction），进一步提升提升性能
+
+如果Level-2中的文件数量超过限制，则继续按照上述算法选出超量的SSTable文件与Level-3中的SSTable文件进行Compaction

@@ -50,3 +50,8 @@ SSTable被划分到不同的level中，详细的Leveled Compaction算法描述�
 注：一般情况下，Level-1和Level-2的Compaction，只会涉及Level-2内大概1/10的SSTable文件，这样可以大幅降低参与Compcation的SSTable文件数量（相比于Size-Tired Compaction），进一步提升提升性能
 
 如果Level-2中的文件数量超过限制，则继续按照上述算法选出超量的SSTable文件与Level-3中的SSTable文件进行Compaction
+
+从Level-2中选出能覆盖该范围的所有SSTable文件
+
+
+LevelDB compaction.png
